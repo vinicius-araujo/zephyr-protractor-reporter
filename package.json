@@ -1,10 +1,11 @@
 {
-  "name": "zephyr-protractor",
-  "version": "1.0.0",
+  "name": "zephyr-protractor-reporter-rc",
+  "version": "1.1.0",
   "description": "Create a Zephyr tests using your protractor conf for your Jira project.",
-  "main": "src/zapi-reporter.js",
+  "main": "lib/zapi-reporter.js",
   "scripts": {
-    "test": "jasmine-node ./spec"
+    "clean": "rimraf lib",
+    "build": "npm run clean && babel src --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -16,16 +17,22 @@
     "e2e"
   ],
   "author": "vinicius araujo",
+  "files": ["lib"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vinicius-araujo/zephyr-protractor-reporter/issues"
   },
   "homepage": "https://github.com/vinicius-araujo/zephyr-protractor-reporter#readme",
   "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-spread": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
     "jsonwebtoken": "^8.5.0",
     "popsicle": "^10.0.1",
     "popsicle-basic-auth": "^1.0.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "rimraf": "^2.6.3"
   },
   "devDependencies": {
     "eslint": "^5.14.1"

@@ -1,15 +1,14 @@
-// const jwt = require('json-web-token');
 const jwt = require('jsonwebtoken');
 const request = require('request');
 let crypto;
 try {
     crypto = require('crypto');
 } catch (err) {
-    onsole.log('crypto support is disabled!');
+    console.log('crypto support is disabled!');
 }
 // const crypto = require('crypto');
 
-const debug = process.env.DEBUG || false
+const debug = false
 
 function callZapiCloud(METHOD, URI, CONTENT_TYPE, ACCESS_KEY, SECRET_KEY, USER, BODY) {
     const hash = crypto.createHash('sha256');
@@ -26,7 +25,7 @@ function callZapiCloud(METHOD, URI, CONTENT_TYPE, ACCESS_KEY, SECRET_KEY, USER, 
         CANONICAL_PATH = `${METHOD}&${RELATIVE_PATH}&`;
     }
 
-    console.log(CANONICAL_PATH)
+    // console.log(CANONICAL_PATH)
 
     hash.update(CANONICAL_PATH);
     let encodedQsh = hash.digest('hex');
@@ -39,9 +38,7 @@ function callZapiCloud(METHOD, URI, CONTENT_TYPE, ACCESS_KEY, SECRET_KEY, USER, 
         'exp': exp
     };
 
-    let token = jwt.sign(payload, SECRET_KEY, function(err, token) {
-        if (err) { console.error(err.name, err.message); } else { return token; }
-    });
+    let token = jwt.sign(payload, SECRET_KEY, {algorithm: 'HS256'});
     let options = {
         'method': METHOD,
         'timeout': 45000,
@@ -186,26 +183,29 @@ var createAdHocExecutionById = function(issueId, projectId) {
     return callZapiCloud('POST', '/execution', 'application/json', ...__ZAPIcreds, body).then((execution) => {
         return execution.execution.id
     });
-
 }
 
 
-var updateExecutionStatus = function(executionId, issueKey, projectId, executionStatus) {
-    return getIssueIdFromIssueKey(issueKey).then((issueId) => {
-        body = {
-            "projectId": projectId,
-            "issueId": issueId,
-            "versionId": -1,
-            "status": { "id": executionStatus }
-        }
-        return callZapiCloud('PUT', '/execution/' + executionId, 'application/json', ...__ZAPIcreds, body).then((result) => {
-            return result
-        });
-    })
+var updateExecutionStatus = function(executionId, issueId, projectId, executionStatus) {
+    body = {
+        "projectId": projectId,
+        "issueId": issueId,
+        "versionId": -1,
+        "status": { "id": executionStatus }
+    }
+    return callZapiCloud('PUT', '/execution/' + executionId, 'application/json', ...__ZAPIcreds, body).then((result) => {
+        return result
+    });
 }
 
-var getAllsteps = function (issueIdN, executionId) {
+var getAllstepsResult = function (issueIdN, executionId) {
     return callZapiCloud('GET', `/stepresult/search?executionId=${executionId}&issueId=${issueIdN}`, 'application/json', ...__ZAPIcreds, body).then((result) => {
+        return result
+    });
+}
+
+var getAllsteps = function (issueid, projectId) {
+    return callZapiCloud('GET', `/teststep/${issueid}?projectId=${projectId}`, 'application/json', ...__ZAPIcreds, body).then((result) => {
         return result
     });
 }
@@ -233,6 +233,7 @@ module.exports = {
     getCycleFromCycleName,
     getIssueIdFromIssueKey,
     createExecution,
+    getAllstepsResult,
     getAllsteps,
     updateTestStep,
     createAdHocExecution,

@@ -1,24 +1,13 @@
 const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
-    options = {
+    this.fs = require('fs');
+    this.globals = {
         executionId: '',
         cycleId: '',
         status: '1',
-        projectId: 11547,
         cycleName: '',
-        host: 'https://exscribe.atlassian.net',
-        steps: true,
-        jiraApi : {
-            username : 'vinicius.dearaujo@bairesdev.com',
-            apiToken : '2vhBgoJDZf4mkyivgbI8A7A3'
-        },
-        ZApi : {
-            username : 'vinicius.dearaujo@bairesdev.com',
-            accessKey : 'NjRlYWE5NTItODFlZS0zY2FkLWIzZTEtMmRkODE2M2ViODQ5IDViOGZiMDAxYTlmZDZkMmM4MzRiM2I5ZCBVU0VSX0RFRkFVTFRfTkFNRQ',
-            secretKey : 'yz0MlfVddw71vlSU-NpT_6Zs1Fvl9hK_dAq3gYuA5iU'
-        },
-      }
-    this.fs = require('fs');
-    this.globals = {...options, steps: []}
+        associateIt : false,
+        ...options, steps: [], stepsOrdered: []
+    }
     global.__ZAPIcreds = [options.ZApi.accessKey, options.ZApi.secretKey, options.ZApi.username]
 
     console.log('initializing ZAPI reporter')
@@ -32,7 +21,7 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
     this.specPromises = [];
     this.specPromisesResolve = {};
 
-    this.suitePromises = [];
+    // this.suitePromises = [];
 
     this.zapiService = require('./zapi-service');
     this.jiraService = require('./jira-service').bind(this, options);
@@ -52,7 +41,6 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
         }
         return;
     }
-
 
     this.suiteStarted = require('./zapi-reporter-functions/suite-started').bind(this);
 

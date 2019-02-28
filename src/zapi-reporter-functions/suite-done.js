@@ -10,20 +10,27 @@ module.exports = function() {
     }
 
     Promise.all(this.specPromises).then(() => {
-        this.zapiService.updateExecutionStatus(
-                this.globals.executionId,
-                this.globals.issueKey,
-                this.globals.projectId,
-                this.globals.status)
-            .then(() => {
-                    if (this.onCompleteDefer.resolve) {
-                        this.onCompleteDefer.resolve();
-                    } else {
-                        this.onCompleteDefer.fulfill();
-                    }
-                },
+        if (this.onCompleteDefer.resolve) {
+            this.onCompleteDefer.resolve();
+        } else {
+            this.onCompleteDefer.fulfill();
+        }
+    })
+    // Promise.all(this.specPromises).then(() => {
+    //     this.zapiService.updateExecutionStatus(
+    //             this.globals.executionId,
+    //             this.globals.issueKey,
+    //             this.globals.projectId,
+    //             this.globals.status)
+    //         .then(() => {
+    //                 if (this.onCompleteDefer.resolve) {
+    //                     this.onCompleteDefer.resolve();
+    //                 } else {
+    //                     this.onCompleteDefer.fulfill();
+    //                 }
+    //             },
 
-            );
-    });
+    //         );
+    // });
 
 }
