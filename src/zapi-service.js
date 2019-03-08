@@ -120,10 +120,7 @@ var deleteAllExecutionsForIssue = function(issueKey) {
         }
         return callZapiCloud('POST', '/executions/delete', 'application/json', ...__ZAPIcreds, body);
 
-
     });
-
-
 }
 
 var getIssueIdFromIssueKey = function(issueKey) {

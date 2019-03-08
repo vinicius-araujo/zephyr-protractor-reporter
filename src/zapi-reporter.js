@@ -4,12 +4,11 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
         executionId: '',
         cycleId: '',
         status: '1',
+        feedback : false,
         cycleName: '',
         associateIt : false,
         ...options, steps: [], stepsOrdered: []
     }
-    global.__ZAPIcreds = [options.ZApi.accessKey, options.ZApi.secretKey, options.ZApi.username]
-
     console.log('initializing ZAPI reporter')
 
     this.disabled = false
@@ -17,6 +16,23 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
     this.onPrepareDefer = onPrepareDefer;
     this.onCompleteDefer = onCompleteDefer;
     this.browser = browser;
+
+    if(!options.ZApi) {
+        console.log('Zephyr reporter is disabled cause Options or Env variables is missing');
+        if (this.onPrepareDefer.resolve) {
+            this.onPrepareDefer.resolve();
+        } else {
+            this.onPrepareDefer.fulfill();
+        }
+
+        if (this.onCompleteDefer.resolve) {
+            this.onCompleteDefer.resolve();
+        } else {
+            this.onCompleteDefer.fulfill();
+        }
+        return;
+    }
+    global.__ZAPIcreds = [options.ZApi.accessKey, options.ZApi.secretKey, options.ZApi.username]
 
     this.specPromises = [];
     this.specPromisesResolve = {};
