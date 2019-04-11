@@ -9,7 +9,7 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
         associateIt : false,
         ...options, steps: [], stepsOrdered: []
     }
-    console.log('initializing ZAPI reporter')
+    console.log('initializing Zephyr reporter')
 
     this.disabled = false
 
@@ -18,7 +18,7 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
     this.browser = browser;
 
     if(!options.ZApi) {
-        console.log('Zephyr reporter is disabled cause Options or Env variables is missing');
+        console.log('Zephyr reporter is Disabled: Options or Env variables is missing');
         if (this.onPrepareDefer.resolve) {
             this.onPrepareDefer.resolve();
         } else {
@@ -30,7 +30,7 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
         } else {
             this.onCompleteDefer.fulfill();
         }
-        return;
+        return this;
     }
     global.__ZAPIcreds = [options.ZApi.accessKey, options.ZApi.secretKey, options.ZApi.username]
 
@@ -55,7 +55,7 @@ const ZapiReporter = (onPrepareDefer, onCompleteDefer, browser, options) => {
         } else {
             this.onCompleteDefer.fulfill();
         }
-        return;
+        return this;
     }
 
     this.suiteStarted = require('./zapi-reporter-functions/suite-started').bind(this);

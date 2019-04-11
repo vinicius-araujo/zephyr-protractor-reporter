@@ -1,6 +1,6 @@
 {
   "name": "zephyr-protractor-reporter-rc",
-  "version": "1.1.2",
+  "version": "1.2.2",
   "description": "Create a Zephyr tests using your protractor conf for your Jira project.",
   "main": "lib/zapi-reporter.js",
   "scripts": {

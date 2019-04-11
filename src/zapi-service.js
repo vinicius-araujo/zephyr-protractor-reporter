@@ -74,7 +74,8 @@ function createPromiseCall(debug, params) {
 }
 
 var zqlSearch = function(query) {
-    return callZapiCloud('POST', '/zql/search?', 'application/json', ...__ZAPIcreds, { 'zqlQuery': `${query}` }).then(searchResults => {
+    return callZapiCloud('POST', '/zql/search?', 'application/json', ...__ZAPIcreds, { 'zqlQuery': `${query}` })
+    .then(searchResults => {
         let result = {
             totalTests: searchResults.totalCount,
             tests: []
@@ -90,7 +91,10 @@ var zqlSearch = function(query) {
             });
         });
         return result;
-    });
+    }, (err) => {
+        console.log(`An error had occured with the callZapiCloud "${e}"`); 
+    })
+    .catch(function(e) { console.log(`An error had occured with the ZAPI api call: "${e}"`); });
 }
 
 var getExecutionStatuses = function() {

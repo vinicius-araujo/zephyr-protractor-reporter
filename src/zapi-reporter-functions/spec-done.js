@@ -4,7 +4,7 @@ module.exports = function(spec) {
     if (this.disabled) {
         return;
     }
-    if (spec.status === 'disabled') {
+    if (spec.status === 'disabled' || spec.status === 'pending') {
         this.specPromisesResolve[spec.id]();
         return;
     }
