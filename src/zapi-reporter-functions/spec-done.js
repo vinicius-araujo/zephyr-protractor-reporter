@@ -38,6 +38,7 @@ module.exports = function(spec) {
     }
 
     this.zapiService.getExecutionsForIssue(issueKey).then((list) => {
+        if(!list) { return this.specPromisesResolve[spec.id]() }
         if(list.tests.length > 0) {
             this.jiraService().getIssueIdByKey(issueKey).then((issueId) => {
                 this.zapiService.updateExecutionStatus(
@@ -52,7 +53,7 @@ module.exports = function(spec) {
         } else {
             createNewTestExecution.call(this);
         }
-    })
+    }, (error) => this.specPromisesResolve[spec.id]())
 
     function createNewTestExecution () {        
         this.jiraService().getIssueIdByKey(issueKey).then((issueId) => {
